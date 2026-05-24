@@ -8,6 +8,7 @@ import { CombatSystem } from '../engine/systems/CombatSystem';
 import { CollisionSystem } from '../engine/systems/CollisionSystem';
 import { EnemySpawner, resetSpawnerState } from '../engine/spawners/EnemySpawner';
 import { SkillSystem } from '../engine/systems/SkillSystem';
+import { Heart, Hexagon, PowerOff, ChevronsUp, Crosshair, Cpu } from 'lucide-react';
 
 export default function CombatScreen() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -135,77 +136,83 @@ export default function CombatScreen() {
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center', 
-            padding: '8px 12px',
+            padding: '10px 14px',
             pointerEvents: 'auto'
           }}
         >
-          <div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--color-brass)', textTransform: 'uppercase' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--color-brass)', textTransform: 'uppercase', fontWeight: 600 }}>
               Current Stage
             </div>
-            <div className="font-display text-cyan" style={{ fontSize: '1.2rem' }}>
+            <div className="font-display text-cyan" style={{ fontSize: '1.4rem', lineHeight: '1' }}>
               Stage {stage}
             </div>
           </div>
           
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.65rem', color: '#A0AEC0' }}>
+          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ fontSize: '0.7rem', color: '#E2E8F0', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px' }}>
+              <Cpu size={12} color="var(--color-brass)" />
               {currentAutomatonName}
             </div>
-            <div style={{ fontSize: '0.6rem', color: 'var(--color-aether-magenta)', textTransform: 'uppercase' }}>
-              AI Core: {playerConfig.selectedAICore}
+            <div style={{ fontSize: '0.65rem', color: 'var(--color-aether-magenta)', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px' }}>
+              <Crosshair size={12} />
+              AI: {playerConfig.selectedAICore}
             </div>
           </div>
         </div>
 
         {/* Health Bar Overlay */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#FFFFFF' }}>
-            <span>AETHER STRUCTURE INTEGRITY</span>
-            <span>{hp} / {maxHp}</span>
+        <div className="glass-panel" style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#FFFFFF', fontWeight: 600 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Heart size={12} style={{ color: 'var(--color-hp-full)' }} /> INTEGRITY
+            </span>
+            <span>{Math.max(0, Math.floor(hp))} / {Math.floor(maxHp)}</span>
           </div>
           <div 
             style={{ 
-              height: '8px', 
-              background: 'rgba(0,0,0,0.5)', 
-              borderRadius: '4px', 
-              border: '1px solid rgba(181, 166, 66, 0.2)',
+              height: '10px', 
+              background: 'rgba(0,0,0,0.7)', 
+              borderRadius: '5px', 
+              border: '1px solid rgba(181, 166, 66, 0.4)',
               overflow: 'hidden' 
             }}
           >
             <div 
               style={{ 
                 height: '100%', 
-                width: `${(hp / maxHp) * 100}%`, 
+                width: `${Math.max(0, (hp / maxHp) * 100)}%`, 
                 background: 'linear-gradient(90deg, #FF3131, #39FF14)',
-                boxShadow: '0 0 8px rgba(57, 255, 20, 0.6)',
-                transition: 'width 0.3s ease' 
+                boxShadow: '0 0 10px rgba(57, 255, 20, 0.6)',
+                transition: 'width 0.2s ease-out' 
               }}
             />
           </div>
         </div>
 
         {/* EXP Bar Overlay */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#FFFFFF' }}>
-            <span>AETHER ENERGY LEVEL</span>
-            <span>{exp} / {nextExp}</span>
+        <div className="glass-panel" style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#FFFFFF', fontWeight: 600 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Hexagon size={12} className="text-cyan" /> AETHER ENERGY
+            </span>
+            <span>{Math.floor(exp)} / {Math.floor(nextExp)}</span>
           </div>
           <div 
             style={{ 
-              height: '6px', 
-              background: 'rgba(0,0,0,0.5)', 
-              borderRadius: '3px', 
-              border: '1px solid rgba(0, 229, 255, 0.1)',
+              height: '8px', 
+              background: 'rgba(0,0,0,0.7)', 
+              borderRadius: '4px', 
+              border: '1px solid rgba(0, 229, 255, 0.3)',
               overflow: 'hidden' 
             }}
           >
             <div 
               style={{ 
                 height: '100%', 
-                width: `${(exp / nextExp) * 100}%`, 
-                background: 'var(--color-aether-cyan)',
-                boxShadow: '0 0 6px var(--color-aether-cyan)',
+                width: `${Math.min(100, (exp / nextExp) * 100)}%`, 
+                background: 'linear-gradient(90deg, rgba(0,229,255,0.5), var(--color-aether-cyan))',
+                boxShadow: '0 0 10px var(--color-aether-glow)',
                 transition: 'width 0.3s ease' 
               }}
             />
@@ -223,16 +230,17 @@ export default function CombatScreen() {
           right: '16px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '10px'
+          gap: '12px'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 4px' }}>
           <div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--color-brass)' }}>ARMAMENT ENGAGED</div>
-            <div className="font-display text-cyan" style={{ fontSize: '0.9rem' }}>{currentWeaponName}</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--color-brass)', fontWeight: 600, letterSpacing: '0.05em' }}>ARMAMENT ENGAGED</div>
+            <div className="font-display text-cyan" style={{ fontSize: '1rem' }}>{currentWeaponName}</div>
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#8892B0' }}>
-            Entities: {entityCount}
+          <div style={{ fontSize: '0.7rem', color: '#A0AEC0', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            <span style={{ fontSize: '0.6rem', color: 'var(--color-brass)' }}>TRACKING</span>
+            <span>{entityCount} ENTITIES</span>
           </div>
         </div>
 
@@ -240,17 +248,17 @@ export default function CombatScreen() {
           <button 
             className="btn-secondary" 
             onClick={handleBackToMenu}
-            style={{ flex: 1, padding: '8px', fontSize: '0.75rem' }}
+            style={{ flex: 1, padding: '10px 8px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
           >
-            Abort Sequence
+            <PowerOff size={14} /> Abort
           </button>
           
           <button 
             className="btn-primary" 
             onClick={handleTestLevelUp}
-            style={{ flex: 1, padding: '8px', fontSize: '0.75rem' }}
+            style={{ flex: 2, padding: '10px 8px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
           >
-            Trigger Level-Up
+            <ChevronsUp size={14} /> Trigger Level-Up
           </button>
         </div>
       </div>
@@ -259,12 +267,12 @@ export default function CombatScreen() {
 }
 
 const AUTOMATONS_NAMES: Record<string, string> = {
-  CHR_01: 'Aegis-01 (Knight)',
-  CHR_02: 'Zephyr-V (Scout)',
-  CHR_03: 'Nova-X (Mage)',
-  CHR_04: 'Shadow-9 (Assassin)',
-  CHR_05: 'Titan-K (Heavy)',
-  CHR_06: 'Oracle-Z (Support)',
+  CHR_01: 'Aegis-01',
+  CHR_02: 'Zephyr-V',
+  CHR_03: 'Nova-X',
+  CHR_04: 'Shadow-9',
+  CHR_05: 'Titan-K',
+  CHR_06: 'Oracle-Z',
 };
 
 const WEAPONS = [

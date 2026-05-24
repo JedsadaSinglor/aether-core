@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
+import { Play } from 'lucide-react';
 
 const SKILL_POOL = [
   { name: 'Multishot', desc: '+1 Projectile, -20% Damage multiplier.', tag: 'Weapon', icon: '🏹' },
@@ -34,21 +35,21 @@ export default function RouletteScreen() {
   useEffect(() => {
     // 1. Slot machine spin loop animation
     let animationId: number;
-    let speed = 40;
+    let speed = 50;
     let position = 0;
     const startTime = Date.now();
 
     const animateReel = () => {
       const elapsed = Date.now() - startTime;
       
-      if (elapsed < 1500) {
+      if (elapsed < 1200) {
         // Spin fast
         position += speed;
-      } else if (elapsed < 2500) {
-        // Decelerate
-        const factor = (2500 - elapsed) / 1000;
-        speed = 40 * factor;
-        position += Math.max(1, speed);
+      } else if (elapsed < 2400) {
+        // Decelerate smoothly
+        const factor = (2400 - elapsed) / 1200;
+        speed = 50 * Math.pow(factor, 2);
+        position += Math.max(1.5, speed);
       } else {
         // Stop spinning
         setSpinning(false);
@@ -61,7 +62,7 @@ export default function RouletteScreen() {
         // Trigger jackpot chime visuals
         setShowJackpot(true);
         setJackpotFlash(true);
-        setTimeout(() => setJackpotFlash(false), 200);
+        setTimeout(() => setJackpotFlash(false), 300);
 
         // Auto-save selected skill to store
         setRunStats({
@@ -71,7 +72,7 @@ export default function RouletteScreen() {
         return;
       }
 
-      setReelOffset(position % (choices.length * 80));
+      setReelOffset(position % (choices.length * 90)); // Increased item height to 90px
       animationId = requestAnimationFrame(animateReel);
     };
 
@@ -86,11 +87,13 @@ export default function RouletteScreen() {
 
   return (
     <div 
+      className="fade-in"
       style={{
         position: 'absolute',
         inset: 0,
-        backgroundColor: 'rgba(11, 12, 16, 0.85)',
-        backdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(3, 4, 6, 0.95)',
+        backgroundImage: 'radial-gradient(circle at center, rgba(0, 229, 255, 0.1) 0%, transparent 70%)',
+        backdropFilter: 'blur(12px)',
         zIndex: 100,
         display: 'flex',
         flexDirection: 'column',
@@ -105,8 +108,8 @@ export default function RouletteScreen() {
         {jackpotFlash && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            exit={{ opacity: 0 }}
+            animate={{ opacity: 0.8 }}
+            exit={{ opacity: 0, transition: { duration: 0.5 } }}
             style={{
               position: 'absolute',
               inset: 0,
@@ -119,11 +122,11 @@ export default function RouletteScreen() {
         )}
       </AnimatePresence>
 
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <h1 className="text-cyan" style={{ fontSize: '1.5rem', marginBottom: '4px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <h1 className="text-cyan" style={{ fontSize: '1.6rem', marginBottom: '6px', letterSpacing: '0.15em' }}>
           APPLYING UPGRADES
         </h1>
-        <div style={{ fontSize: '0.75rem', color: 'var(--color-brass)', letterSpacing: '0.1em' }}>
+        <div style={{ fontSize: '0.75rem', color: 'var(--color-brass)', letterSpacing: '0.2em' }}>
           INTELLIGENT COMPLIANCE CORE
         </div>
       </div>
@@ -131,31 +134,31 @@ export default function RouletteScreen() {
       {/* Reel Spinner Box */}
       <div 
         style={{
-          width: '260px',
-          height: '160px',
-          border: '2px solid var(--color-brass)',
-          boxShadow: '0 0 15px var(--color-brass-glow), inset 0 0 10px rgba(0,0,0,0.8)',
-          background: '#0B0C10',
+          width: '280px',
+          height: '180px',
+          border: '2px solid rgba(181, 166, 66, 0.6)',
+          boxShadow: '0 0 30px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(0,0,0,0.9)',
+          background: '#030406',
           position: 'relative',
           overflow: 'hidden',
-          borderRadius: '8px',
-          marginBottom: '24px'
+          borderRadius: '12px',
+          marginBottom: '32px'
         }}
       >
         {/* Shaded boundaries for realism */}
         <div 
           style={{
             position: 'absolute',
-            top: 0, left: 0, right: 0, height: '40px',
-            background: 'linear-gradient(180deg, rgba(11,12,16,0.9) 0%, rgba(11,12,16,0) 100%)',
+            top: 0, left: 0, right: 0, height: '60px',
+            background: 'linear-gradient(180deg, rgba(3,4,6,1) 0%, rgba(3,4,6,0) 100%)',
             pointerEvents: 'none', zIndex: 2
           }}
         />
         <div 
           style={{
             position: 'absolute',
-            bottom: 0, left: 0, right: 0, height: '40px',
-            background: 'linear-gradient(360deg, rgba(11,12,16,0.9) 0%, rgba(11,12,16,0) 100%)',
+            bottom: 0, left: 0, right: 0, height: '60px',
+            background: 'linear-gradient(360deg, rgba(3,4,6,1) 0%, rgba(3,4,6,0) 100%)',
             pointerEvents: 'none', zIndex: 2
           }}
         />
@@ -167,11 +170,12 @@ export default function RouletteScreen() {
             top: '50%',
             left: 0,
             right: 0,
-            height: '80px',
+            height: '90px',
             transform: 'translateY(-50%)',
-            borderTop: '1px dashed var(--color-aether-cyan)',
-            borderBottom: '1px dashed var(--color-aether-cyan)',
-            background: 'rgba(0, 229, 255, 0.03)',
+            borderTop: '2px solid rgba(0, 229, 255, 0.5)',
+            borderBottom: '2px solid rgba(0, 229, 255, 0.5)',
+            background: 'rgba(0, 229, 255, 0.05)',
+            boxShadow: '0 0 10px rgba(0, 229, 255, 0.2)',
             pointerEvents: 'none',
             zIndex: 1
           }}
@@ -185,7 +189,7 @@ export default function RouletteScreen() {
             position: 'absolute',
             left: 0,
             right: 0,
-            top: spinning ? -reelOffset : '40px', // center item when stopped
+            top: spinning ? -reelOffset : '45px', // center item when stopped (90px height / 2)
             zIndex: 0
           }}
         >
@@ -195,17 +199,17 @@ export default function RouletteScreen() {
               <div 
                 key={idx}
                 style={{
-                  height: '80px',
+                  height: '90px',
                   display: 'flex',
                   alignItems: 'center',
                   padding: '0 24px',
                   gap: '16px'
                 }}
               >
-                <div style={{ fontSize: '2.2rem' }}>{skill.icon}</div>
+                <div style={{ fontSize: '2.5rem', filter: 'blur(1px)' }}>{skill.icon}</div>
                 <div>
-                  <h3 style={{ fontSize: '1rem', color: '#FFFFFF', textTransform: 'uppercase' }}>{skill.name}</h3>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--color-aether-cyan)' }}>TAG: {skill.tag}</div>
+                  <h3 style={{ fontSize: '1.1rem', color: '#FFFFFF', textTransform: 'uppercase', filter: 'blur(0.5px)' }}>{skill.name}</h3>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--color-aether-cyan)' }}>TAG: {skill.tag}</div>
                 </div>
               </div>
             ))
@@ -213,23 +217,30 @@ export default function RouletteScreen() {
             // Stopped: Draw single locked-in skill card in center
             selectedSkill && (
               <motion.div 
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1.1, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                 style={{
-                  height: '80px',
+                  height: '90px',
                   display: 'flex',
                   alignItems: 'center',
                   padding: '0 24px',
                   gap: '16px'
                 }}
               >
-                <div style={{ fontSize: '2.5rem' }}>{selectedSkill.icon}</div>
+                <motion.div 
+                  initial={{ scale: 1 }}
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                  style={{ fontSize: '2.8rem', textShadow: '0 0 20px rgba(255,255,255,0.5)' }}
+                >
+                  {selectedSkill.icon}
+                </motion.div>
                 <div>
-                  <h3 style={{ fontSize: '1.15rem', color: '#FFFFFF', textTransform: 'uppercase' }}>
+                  <h3 style={{ fontSize: '1.25rem', color: '#FFFFFF', textTransform: 'uppercase', textShadow: '0 0 10px rgba(0, 229, 255, 0.5)' }}>
                     {selectedSkill.name}
                   </h3>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--color-aether-cyan)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--color-aether-cyan)', fontWeight: 600 }}>
                     TAG: {selectedSkill.tag}
                   </div>
                 </div>
@@ -240,35 +251,59 @@ export default function RouletteScreen() {
       </div>
 
       {/* Selected Skill Details Box */}
-      <AnimatePresence>
-        {showJackpot && selectedSkill && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            className="glass-panel-neon"
-            style={{
-              width: '260px',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px'
-            }}
-          >
-            <div style={{ fontSize: '0.8rem', color: '#E2E8F0', lineHeight: '1.4' }}>
-              {selectedSkill.desc}
-            </div>
-
-            <button 
-              className="btn-primary" 
-              onClick={handleResume}
-              style={{ fontSize: '0.8rem', padding: '8px' }}
+      <div style={{ height: '160px', width: '280px', display: 'flex', justifyContent: 'center' }}>
+        <AnimatePresence>
+          {showJackpot && selectedSkill && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ delay: 0.3, duration: 0.4 }}
+              className="glass-panel-neon"
+              style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: '16px'
+              }}
             >
-              Resume Combat
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-brass)', textTransform: 'uppercase', marginBottom: '8px', fontWeight: 700 }}>
+                  MODIFIER ACQUIRED
+                </div>
+                <div style={{ fontSize: '0.85rem', color: '#E2E8F0', lineHeight: '1.5' }}>
+                  {selectedSkill.desc}
+                </div>
+              </div>
+
+              <button 
+                className="btn-primary" 
+                onClick={handleResume}
+                style={{ 
+                  marginTop: '16px',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  gap: '8px' 
+                }}
+              >
+                <Play size={16} fill="currentColor" /> RESUME COMBAT
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <style>{`
+        .fade-in {
+          animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -4,6 +4,7 @@
   --color-bg-secondary: #1F2833;
   
   --color-aether-cyan: #00E5FF;
+  --color-aether-cyan-muted: rgba(0, 229, 255, 0.2);
   --color-aether-magenta: #FF00E5;
   --color-aether-glow: rgba(0, 229, 255, 0.6);
   --color-aether-glow-magenta: rgba(255, 0, 229, 0.6);
@@ -64,23 +65,35 @@ body {
 
 /* Glassmorphism Panel */
 .glass-panel {
-  background: rgba(31, 40, 51, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(181, 166, 66, 0.35);
+  background: rgba(31, 40, 51, 0.65); /* Darkened for better contrast */
+  backdrop-filter: blur(16px); /* Increased blur */
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(181, 166, 66, 0.5); /* Stronger border */
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(181, 166, 66, 0.05);
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.glass-panel:hover {
+  border-color: rgba(181, 166, 66, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(181, 166, 66, 0.1);
 }
 
 .glass-panel-neon {
-  background: rgba(31, 40, 51, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: rgba(31, 40, 51, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 229, 255, 0.5);
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 229, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 229, 255, 0.1);
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.glass-panel-neon:hover {
+  border-color: rgba(0, 229, 255, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 229, 255, 0.2);
 }
 
 /* Typography */
@@ -110,7 +123,7 @@ h3 {
 
 /* Buttons */
 .btn-primary {
-  background: transparent;
+  background: rgba(0, 229, 255, 0.1);
   border: 2px solid var(--color-aether-cyan);
   color: var(--color-aether-cyan);
   font-family: var(--font-primary);
@@ -125,13 +138,13 @@ h3 {
   position: relative;
   overflow: hidden;
   text-shadow: 0 0 5px var(--color-aether-glow);
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
 }
 
 .btn-primary:hover {
   background: var(--color-aether-cyan);
   color: var(--color-bg-primary);
-  box-shadow: 0 0 20px var(--color-aether-glow);
+  box-shadow: 0 0 25px var(--color-aether-glow);
   text-shadow: none;
 }
 
@@ -140,7 +153,7 @@ h3 {
 }
 
 .btn-secondary {
-  background: transparent;
+  background: rgba(181, 166, 66, 0.1);
   border: 2px solid var(--color-brass);
   color: var(--color-brass);
   font-family: var(--font-primary);
@@ -152,13 +165,13 @@ h3 {
   border-radius: 4px;
   cursor: pointer;
   transition: all var(--transition-speed) var(--ease-snappy);
-  box-shadow: 0 0 5px rgba(181, 166, 66, 0.1);
+  box-shadow: 0 0 10px rgba(181, 166, 66, 0.15);
 }
 
 .btn-secondary:hover {
   background: var(--color-brass);
   color: var(--color-bg-primary);
-  box-shadow: 0 0 15px var(--color-brass-glow);
+  box-shadow: 0 0 20px var(--color-brass-glow);
 }
 
 .btn-secondary:active {
@@ -166,8 +179,10 @@ h3 {
 }
 
 .btn-disabled {
-  border-color: #4a5568;
-  color: #4a5568;
+  background: transparent !important;
+  border-color: #4a5568 !important;
+  color: #4a5568 !important;
+  box-shadow: none !important;
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -192,19 +207,58 @@ h3 {
   color: var(--color-copper);
 }
 
+/* Tooltip Styles */
+.tooltip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+}
+
+.tooltip-popup {
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(11, 12, 16, 0.95);
+  border: 1px solid var(--color-aether-cyan);
+  color: #E2E8F0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  width: max-content;
+  max-width: 200px;
+  text-align: center;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0, 229, 255, 0.15);
+  pointer-events: none;
+}
+
+.tooltip-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--color-aether-cyan) transparent transparent transparent;
+}
+
 /* Scrollbars styling */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-primary);
+  background: rgba(11, 12, 16, 0.5);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-brass);
-  border-radius: 2px;
+  background: rgba(181, 166, 66, 0.5);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

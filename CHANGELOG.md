@@ -135,3 +135,13 @@ All modifications to this workspace made by AI agents must be logged here accord
   - `src/engine/systems/SkillSystem.ts`
   - `src/engine/systems/AISystem.ts`
 
+## [2026-05-24] - UI/UX Overhaul & Aesthetics Polish
+- **Action Taken:** Completely revamped the game's UI layout and visual feedback. Added `lucide-react` for high-quality iconography across all screens. Redesigned `PreRunScreen.tsx` with interactive tooltips and structured glass panels. Improved Combat HUD visibility with thicker bars and prominent icons. Upgraded the visual weight of the Roulette reel and redesigned the Diagnostics screen to a readable grid layout.
+- **Rationale:** To address user feedback regarding the difficulty of use and understanding. Enhances the Aetherpunk aesthetics and reduces cognitive load during gameplay and menu navigation.
+- **Affected Files:**
+  - `src/index.css`
+  - `src/screens/PreRunScreen.tsx`
+  - `src/styles/PreRunScreen.css`
+  - `src/screens/CombatScreen.tsx`
+  - `src/screens/RouletteScreen.tsx`
+  - `src/screens/GameOverScreen.tsx`
