@@ -1,0 +1,212 @@
+:root {
+  /* Colors */
+  --color-bg-primary: #0B0C10;
+  --color-bg-secondary: #1F2833;
+  
+  --color-aether-cyan: #00E5FF;
+  --color-aether-magenta: #FF00E5;
+  --color-aether-glow: rgba(0, 229, 255, 0.6);
+  --color-aether-glow-magenta: rgba(255, 0, 229, 0.6);
+  
+  --color-brass: #B5A642;
+  --color-brass-glow: rgba(181, 166, 66, 0.4);
+  --color-copper: #CB6D51;
+  
+  --color-hp-full: #39FF14;
+  --color-hp-low: #FF3131;
+  --color-crit: #FFE135;
+  
+  /* Fonts */
+  --font-primary: 'Outfit', sans-serif;
+  --font-secondary: 'Inter', sans-serif;
+  
+  /* Easing */
+  --ease-snappy: cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-speed: 0.2s;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  background-color: #030406; /* Even darker than void dark for the outer background */
+  color: #E2E8F0;
+  font-family: var(--font-secondary);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 9:16 Game Viewport Wrapper */
+.game-viewport {
+  width: 100%;
+  height: 100%;
+  max-width: 450px;
+  max-height: 800px;
+  aspect-ratio: 9 / 16;
+  background-color: var(--color-bg-primary);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 2px var(--color-brass);
+  border: 1px solid rgba(181, 166, 66, 0.4);
+  border-radius: 12px;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: rgba(31, 40, 51, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(181, 166, 66, 0.35);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-panel-neon {
+  background: rgba(31, 40, 51, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 229, 255, 0.05);
+}
+
+/* Typography */
+h1, h2, h3, .font-display {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--color-aether-cyan);
+  text-shadow: 0 0 10px var(--color-aether-glow);
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--color-brass);
+  text-shadow: 0 0 5px rgba(181, 166, 66, 0.2);
+}
+
+h3 {
+  font-size: 1.1rem;
+  color: #FFFFFF;
+}
+
+/* Buttons */
+.btn-primary {
+  background: transparent;
+  border: 2px solid var(--color-aether-cyan);
+  color: var(--color-aether-cyan);
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-speed) var(--ease-snappy);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 0 5px var(--color-aether-glow);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+}
+
+.btn-primary:hover {
+  background: var(--color-aether-cyan);
+  color: var(--color-bg-primary);
+  box-shadow: 0 0 20px var(--color-aether-glow);
+  text-shadow: none;
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--color-brass);
+  color: var(--color-brass);
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-speed) var(--ease-snappy);
+  box-shadow: 0 0 5px rgba(181, 166, 66, 0.1);
+}
+
+.btn-secondary:hover {
+  background: var(--color-brass);
+  color: var(--color-bg-primary);
+  box-shadow: 0 0 15px var(--color-brass-glow);
+}
+
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+.btn-disabled {
+  border-color: #4a5568;
+  color: #4a5568;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Neon Text Glows */
+.text-cyan {
+  color: var(--color-aether-cyan);
+  text-shadow: 0 0 8px var(--color-aether-glow);
+}
+
+.text-magenta {
+  color: var(--color-aether-magenta);
+  text-shadow: 0 0 8px var(--color-aether-glow-magenta);
+}
+
+.text-brass {
+  color: var(--color-brass);
+  text-shadow: 0 0 8px var(--color-brass-glow);
+}
+
+.text-copper {
+  color: var(--color-copper);
+}
+
+/* Scrollbars styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brass);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-aether-cyan);
+}
